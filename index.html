@@ -455,6 +455,7 @@ function addManual() {
 // ── UPLOAD TAB ────────────────────────────────────────────────────────────────
 function renderUpload() {
   const savedKey = localStorage.getItem('jwa-gemini-key') || '';
+  if (savedKey) apiKey = savedKey;
   const keySaved = !!savedKey;
   document.getElementById('tab-upload').innerHTML = `
     <div class="api-box">
@@ -470,7 +471,7 @@ function renderUpload() {
       <div style="font-family:'Orbitron',sans-serif;font-size:13px;color:#4af;margin-bottom:8px">DROP SCREENSHOTS HERE</div>
       <div style="font-size:12px;color:#2a6080;margin-bottom:14px">or tap the button below</div>
       <button id="select-btn" class="${keySaved?'btn-primary':'btn-disabled'}" onclick="if(apiKey){document.getElementById('file-input').click();}else{alert('Save your Gemini API key first.');}">${keySaved?'SELECT IMAGES':'SAVE API KEY FIRST'}</button>
-      <input type="file" id="file-input" accept="image/*" multiple style="display:none" onchange="handleFileInput(event)">
+      <input type="file" id="file-input" accept="image/*" multiple style="display:none">
     </div>
     <div id="upload-progress" style="display:none" class="progress-container">
       <div style="display:flex;justify-content:space-between;margin-bottom:8px">
@@ -487,6 +488,9 @@ function renderUpload() {
       <div class="info-box-title">TIPS</div>
       Screenshot your JWA collection screen showing creature cards with DNA counts. Both base creatures AND hybrids you already have should be screenshotted — the app uses your hybrid DNA to know which ones you've already created.
     </div>`;
+  // Attach file input listener fresh every render
+  const fi = document.getElementById('file-input');
+  if (fi) fi.onchange = (e) => { handleFileInput(e); };
 }
 
 function handleDragOver(e) { e.preventDefault(); document.getElementById('drop-zone').classList.add('drag-over'); }
@@ -497,11 +501,15 @@ function handleFileInput(e) { processFiles([...e.target.files]); e.target.value=
 async function processFiles(files) {
   if (!apiKey) { alert('Please save your Gemini API key first.'); return; }
   if (!files.length) return;
+  // Reset debug state
+  window._lastGeminiText = null;
+  window._lastGeminiResponse = null;
   const prog = document.getElementById('upload-progress');
   const bar = document.getElementById('progress-bar');
   const txt = document.getElementById('progress-text');
   const eta = document.getElementById('progress-eta');
   const res = document.getElementById('upload-results');
+  if(!prog||!bar||!txt||!eta||!res){ alert('Page not ready. Please refresh and try again.'); return; }
   prog.style.display='block'; res.innerHTML='';
   const log=[], all=[];
   for (let i=0; i<files.length; i++) {
