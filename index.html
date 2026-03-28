@@ -515,11 +515,13 @@ async function processFiles(files) {
   bar.style.width='100%'; txt.textContent=`${files.length}/${files.length}`; eta.textContent='Complete!';
   setTimeout(()=>{prog.style.display='none';},1500);
   const ok=all.length>0;
+  const debugText = window._lastGeminiText ? `<div style="margin-top:10px;padding:8px;background:#080f1a;border-radius:6px;font-size:10px;color:#4a8aaa;word-break:break-all;font-family:monospace">RAW RESPONSE: ${(window._lastGeminiText||'').slice(0,400)}</div>` : '';
   res.innerHTML=`<div class="result-box" style="background:${ok?'#0a2010':'#200a0a'};border:1px solid ${ok?'#2a6020':'#602020'}">
     <div style="font-family:'Orbitron',sans-serif;font-size:12px;color:${ok?'#4f4':'#f44'};margin-bottom:10px">${ok?`✓ ${all.length} ENTRIES UPDATED`:'✗ NO DATA DETECTED'}</div>
     ${log.map(f=>`<div class="result-row"><span style="color:#4a7a8a;max-width:60%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${f.name}</span><span style="color:${f.status==='ok'?'#4f4':f.status==='empty'?'#fa4':'#f44'};font-weight:700">${f.status==='ok'?'+'+f.count:f.status==='empty'?'no data':('error: '+(f.errMsg||'unknown'))}</span></div>`).join('')}
     ${all.slice(0,15).map(item=>`<div class="result-row"><span style="color:#4a9aaa">${item.name}</span><span style="color:#4af;font-weight:700">${item.dna?.toLocaleString()}</span></div>`).join('')}
     ${all.length>15?`<div style="font-size:11px;color:#2a6080;margin-top:6px;text-align:center">+${all.length-15} more saved</div>`:''}
+    ${debugText}
   </div>`;
   renderAll();
 }
@@ -534,13 +536,18 @@ async function parseWithGemini(file) {
     ]}],generationConfig:{temperature:0}})
   });
   const data=await resp.json();
-  if(data.error) throw new Error('Gemini API error: '+data.error.message+' (code '+data.error.code+')');
-  if(!data.candidates||!data.candidates.length) throw new Error('No candidates returned. Full response: '+JSON.stringify(data).slice(0,200));
-  const t=data.candidates[0]?.content?.parts?.[0]?.text||'[]';
+  // Store raw response for debug display
+  window._lastGeminiResponse = JSON.stringify(data).slice(0, 500);
+  if(data.error) throw new Error('API error: '+data.error.message);
+  if(!data.candidates||!data.candidates.length) throw new Error('No candidates. Response: '+window._lastGeminiResponse);
+  const t=data.candidates[0]?.content?.parts?.[0]?.text||'';
+  window._lastGeminiText = t;
+  if(!t) throw new Error('Empty text response');
   try {
-    return JSON.parse(t.replace(/```json|```/g,'').trim());
+    const parsed = JSON.parse(t.replace(/```json|```/g,'').trim());
+    return parsed;
   } catch(e) {
-    throw new Error('JSON parse failed. Raw response: '+t.slice(0,200));
+    throw new Error('Parse failed. Raw text: '+t.slice(0,300));
   }
 }
 
