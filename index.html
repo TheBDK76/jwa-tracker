@@ -71,7 +71,7 @@
   <div class="header-icon">🦕</div>
   <div>
     <div class="header-title">JWA DNA Tracker</div>
-    <div class="header-sub">JURASSIC WORLD ALIVE · COMPANION · v1.2</div>
+    <div class="header-sub">JURASSIC WORLD ALIVE · COMPANION · v1.3</div>
   </div>
   <div class="header-count">
     <div class="header-count-num" id="creature-count">0</div>
@@ -514,7 +514,7 @@ async function testApiKey() {
   if (!apiKey) { result.innerHTML = '<span style="color:#f44">No API key saved</span>'; return; }
   result.innerHTML = '<span style="color:#4a8aaa">Testing...</span>';
   try {
-    const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+    const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`, {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({contents:[{parts:[{text:'Reply with just the word WORKING'}]}]})
@@ -593,7 +593,7 @@ async function processFiles(files) {
 
 async function parseWithGemini(file) {
   const b64=await new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result.split(',')[1]);r.onerror=rej;r.readAsDataURL(file);});
-  const resp=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,{
+  const resp=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,{
     method:'POST',headers:{'Content-Type':'application/json'},
     body:JSON.stringify({contents:[{parts:[
       {inline_data:{mime_type:file.type||'image/jpeg',data:b64}},
