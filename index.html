@@ -71,7 +71,7 @@
   <div class="header-icon">🦕</div>
   <div>
     <div class="header-title">JWA DNA Tracker</div>
-    <div class="header-sub">JURASSIC WORLD ALIVE · COMPANION · v1.0</div>
+    <div class="header-sub">JURASSIC WORLD ALIVE · COMPANION · v1.2</div>
   </div>
   <div class="header-count">
     <div class="header-count-num" id="creature-count">0</div>
@@ -255,12 +255,8 @@ function saveApiKey() {
   if (badge) badge.style.display = 'inline';
   const input = document.getElementById('api-key-input');
   if (input) input.style.borderColor = '#4f4';
-  const btn = document.getElementById('select-btn');
-  if (btn) {
-    btn.className = 'btn-primary';
-    btn.textContent = 'SELECT IMAGES';
-    btn.onclick = () => document.getElementById('file-input').click();
-  }
+  // Re-render upload tab to show saved state
+  if (activeTab === 'upload') renderUpload();
 }
 
 function showTab(tab) {
@@ -459,12 +455,21 @@ function renderUpload() {
   const keySaved = !!savedKey;
   document.getElementById('tab-upload').innerHTML = `
     <div class="api-box">
-      <div class="api-label">GEMINI API KEY <span id="key-saved-badge" style="color:#4f4;display:${keySaved?'inline':'none'}">✓ SAVED</span></div>
-      <div class="flex-row">
-        <input type="password" id="api-key-input" placeholder="Paste your free Gemini API key..." style="font-family:monospace;font-size:12px;flex:1;border-color:${keySaved?'#4f4':'#0a3050'}" value="${savedKey}">
-        <button class="btn-success" onclick="saveApiKey()" style="white-space:nowrap">SAVE</button>
-      </div>
+      <div class="api-label">GEMINI API KEY</div>
+      ${keySaved ? `
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+          <div style="flex:1;background:#080f1a;border:1px solid #4f4;border-radius:8px;padding:9px 12px;font-family:monospace;font-size:12px;color:#4f4;letter-spacing:3px">●●●●●●●●●●●●●●●● ✓ SAVED</div>
+          <button class="btn-primary" style="white-space:nowrap;padding:9px 14px;font-size:10px" onclick="clearApiKey()">CHANGE</button>
+        </div>
+      ` : `
+        <div class="flex-row" style="margin-bottom:8px">
+          <input type="password" id="api-key-input" placeholder="Paste your Gemini API key..." style="font-family:monospace;font-size:12px;flex:1">
+          <button class="btn-success" onclick="saveApiKey()" style="white-space:nowrap">SAVE</button>
+        </div>
+      `}
       <div class="api-hint">Free from aistudio.google.com · Stored in your browser only</div>
+      <button class="btn-primary" style="margin-top:10px;width:100%" onclick="testApiKey()">TEST API KEY</button>
+      <div id="api-test-result" style="margin-top:8px;font-size:12px;text-align:center"></div>
     </div>
     <div class="drop-zone" id="drop-zone" ondrop="handleDrop(event)" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)">
       <div style="font-size:44px;margin-bottom:10px">📸</div>
@@ -497,6 +502,34 @@ function handleDragOver(e) { e.preventDefault(); document.getElementById('drop-z
 function handleDragLeave() { document.getElementById('drop-zone').classList.remove('drag-over'); }
 function handleDrop(e) { e.preventDefault(); document.getElementById('drop-zone').classList.remove('drag-over'); processFiles([...e.dataTransfer.files].filter(f=>f.type.startsWith('image/'))); }
 function handleFileInput(e) { processFiles([...e.target.files]); e.target.value=''; }
+
+function clearApiKey() {
+  apiKey = '';
+  localStorage.removeItem('jwa-gemini-key');
+  renderUpload();
+}
+
+async function testApiKey() {
+  const result = document.getElementById('api-test-result');
+  if (!apiKey) { result.innerHTML = '<span style="color:#f44">No API key saved</span>'; return; }
+  result.innerHTML = '<span style="color:#4a8aaa">Testing...</span>';
+  try {
+    const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({contents:[{parts:[{text:'Reply with just the word WORKING'}]}]})
+    });
+    const data = await resp.json();
+    if (data.error) {
+      result.innerHTML = `<span style="color:#f44">ERROR: ${data.error.message}</span>`;
+    } else {
+      const txt = data.candidates?.[0]?.content?.parts?.[0]?.text || 'no response';
+      result.innerHTML = `<span style="color:#4f4">✓ API key works! Response: ${txt.slice(0,50)}</span>`;
+    }
+  } catch(e) {
+    result.innerHTML = `<span style="color:#f44">FAILED: ${e.message}</span>`;
+  }
+}
 
 async function processFiles(files) {
   if (!apiKey) { alert('Please save your Gemini API key first.'); return; }
