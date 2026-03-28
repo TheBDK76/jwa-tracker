@@ -251,8 +251,16 @@ function saveApiKey() {
   if (!val) return;
   apiKey = val;
   localStorage.setItem('jwa-gemini-key', val);
-  document.getElementById('key-saved-badge').style.display = 'inline';
-  document.getElementById('api-key-input').style.borderColor = '#4f4';
+  const badge = document.getElementById('key-saved-badge');
+  if (badge) badge.style.display = 'inline';
+  const input = document.getElementById('api-key-input');
+  if (input) input.style.borderColor = '#4f4';
+  const btn = document.getElementById('select-btn');
+  if (btn) {
+    btn.className = 'btn-primary';
+    btn.textContent = 'SELECT IMAGES';
+    btn.onclick = () => document.getElementById('file-input').click();
+  }
 }
 
 function showTab(tab) {
@@ -461,7 +469,7 @@ function renderUpload() {
       <div style="font-size:44px;margin-bottom:10px">📸</div>
       <div style="font-family:'Orbitron',sans-serif;font-size:13px;color:#4af;margin-bottom:8px">DROP SCREENSHOTS HERE</div>
       <div style="font-size:12px;color:#2a6080;margin-bottom:14px">or tap the button below</div>
-      <button class="${keySaved?'btn-primary':'btn-disabled'}" onclick="${keySaved?`document.getElementById('file-input').click()`:'alert(\"Save your Gemini API key first.\")'}">${keySaved?'SELECT IMAGES':'SAVE API KEY FIRST'}</button>
+      <button id="select-btn" class="${keySaved?'btn-primary':'btn-disabled'}" onclick="if(apiKey){document.getElementById('file-input').click();}else{alert('Save your Gemini API key first.');}">${keySaved?'SELECT IMAGES':'SAVE API KEY FIRST'}</button>
       <input type="file" id="file-input" accept="image/*" multiple style="display:none" onchange="handleFileInput(event)">
     </div>
     <div id="upload-progress" style="display:none" class="progress-container">
