@@ -1,1 +1,9 @@
-
+{
+  "name": "jwa-scraper",
+  "version": "1.0.0",
+  "description": "Monthly paleo.gg scraper for JWA DNA Tracker",
+  "main": "scrape.js",
+  "dependencies": {
+    "puppeteer-core": "^22.0.0"
+  }
+}
