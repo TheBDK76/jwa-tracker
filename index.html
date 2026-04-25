@@ -6,61 +6,57 @@
 <title>JWA DNA Tracker</title>
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: #050d14; color: #c8e6ff; font-family: 'Rajdhani', sans-serif; min-height: 100vh; }
-  body::before { content: ''; position: fixed; inset: 0; background: radial-gradient(ellipse at 20% 50%, rgba(0,80,160,0.15) 0%, transparent 60%), radial-gradient(ellipse at 80% 20%, rgba(80,0,160,0.1) 0%, transparent 50%); pointer-events: none; }
-  .header { background: linear-gradient(135deg, #061828 0%, #0a1f35 50%, #061828 100%); border-bottom: 2px solid #0a4060; padding: 16px 20px; display: flex; align-items: center; gap: 14px; box-shadow: 0 4px 30px rgba(0,120,255,0.15); position: sticky; top: 0; z-index: 10; }
-  .header-icon { font-size: 32px; }
-  .header-title { font-family: 'Orbitron', sans-serif; font-size: 16px; font-weight: 900; color: #4af; letter-spacing: 3px; }
-  .header-sub { font-size: 11px; color: #4a8aaa; letter-spacing: 2px; }
-  .header-bdk { font-size: 11px; color: #ffffff; letter-spacing: 1px; margin-top: 3px; font-weight: 600; }
-  .header-count { margin-left: auto; text-align: right; }
-  .header-count-num { font-size: 22px; font-weight: 700; color: #4af; font-family: 'Orbitron', sans-serif; }
-  .header-count-label { font-size: 10px; color: #4a8aaa; letter-spacing: 1px; }
-  .bdk-banner { background: #0a0a0a; border-bottom: 1px solid #222; padding: 6px 0; text-align: center; font-size: 12px; color: #fff; font-family: 'Rajdhani', sans-serif; letter-spacing: 2px; font-weight: 600; }
-  .tabs { display: flex; border-bottom: 1px solid #0a3050; background: #040e1a; position: sticky; top: 100px; z-index: 9; }
-  .tab { flex: 1; padding: 10px 2px; border: none; cursor: pointer; background: transparent; color: #4a7a9a; font-family: 'Orbitron', sans-serif; font-size: 8px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; border-bottom: 2px solid transparent; transition: all 0.2s; }
-  .tab.active { background: #0a2040; color: #4af; border-bottom-color: #4af; }
-  .rarity-filter { display: flex; gap: 6px; padding: 10px 14px; background: #040e1a; border-bottom: 1px solid #0a2030; flex-wrap: wrap; }
-  .rarity-btn { padding: 4px 10px; border-radius: 20px; border: 1px solid #1a3050; background: transparent; color: #4a7a9a; cursor: pointer; font-size: 11px; font-weight: 600; letter-spacing: 1px; font-family: 'Rajdhani', sans-serif; transition: all 0.2s; }
-  .content { padding: 14px; max-width: 900px; margin: 0 auto; }
-  .empty-state { text-align: center; padding: 60px 20px; color: #2a5070; }
-  .empty-icon { font-size: 48px; margin-bottom: 12px; }
-  .empty-title { font-family: 'Orbitron', sans-serif; font-size: 13px; }
-  .empty-sub { font-size: 12px; margin-top: 8px; color: #1a3040; }
-  .card { border-radius: 8px; padding: 12px 14px; margin-bottom: 10px; }
-  .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-  .card-name { font-family: 'Orbitron', sans-serif; font-size: 13px; font-weight: 700; }
-  .badge { padding: 2px 8px; border-radius: 12px; font-size: 10px; font-weight: 700; letter-spacing: 1px; }
-  .section-group { font-family: 'Orbitron', sans-serif; font-size: 10px; color: #2a6080; letter-spacing: 2px; padding: 6px 0 4px; border-bottom: 1px solid #0a2030; margin-bottom: 10px; }
-  .progress-row { margin-bottom: 5px; }
-  .progress-labels { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 3px; }
-  .progress-bar { height: 4px; background: #0a2030; border-radius: 2px; overflow: hidden; }
-  .progress-fill { height: 100%; border-radius: 2px; transition: width 0.4s ease; }
-  .chain-tree { margin-top: 8px; padding: 8px; background: #040e14; border-radius: 6px; font-size: 11px; }
-  .chain-row { padding: 3px 0; display: flex; align-items: flex-start; gap: 6px; }
-  .chain-indent { padding-left: 16px; border-left: 1px solid #0a3050; margin-left: 6px; }
-  .chain-icon { width: 14px; flex-shrink: 0; }
-  input[type="text"], input[type="number"], input[type="password"], input[type="search"], textarea { background: #080f1a; border: 1px solid #0a3050; border-radius: 8px; color: #c8e6ff; font-family: 'Rajdhani', sans-serif; font-size: 13px; outline: none; padding: 9px 12px; width: 100%; }
-  input::placeholder, textarea::placeholder { color: #2a5070; }
-  button { cursor: pointer; font-family: 'Orbitron', sans-serif; font-weight: 700; border-radius: 8px; border: none; transition: all 0.2s; }
-  .btn-primary { background: #0a3060; border: 1px solid #4af; color: #4af; padding: 10px 18px; font-size: 11px; letter-spacing: 1px; }
-  .btn-success { background: #0a3020; border: 1px solid #4f4; color: #4f4; padding: 10px 18px; font-size: 11px; letter-spacing: 1px; }
-  .btn-disabled { background: #0a1a2a; border: 1px solid #0a2535; color: #1a4060; padding: 10px 18px; font-size: 11px; letter-spacing: 1px; cursor: not-allowed; }
-  .info-box { background: #060f1a; border: 1px solid #0a2535; border-radius: 10px; padding: 14px 16px; font-size: 12px; color: #2a6080; line-height: 1.7; margin-top: 16px; }
-  .info-box-title { color: #4a8aaa; font-weight: 700; margin-bottom: 6px; letter-spacing: 1px; font-size: 11px; font-family: 'Orbitron', sans-serif; }
-  .inv-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 8px; }
-  .inv-item { background: #080f1a; border: 1px solid #0a2535; border-radius: 8px; padding: 8px 12px; display: flex; justify-content: space-between; align-items: center; }
-  .drop-zone { border: 2px dashed #0a4060; border-radius: 12px; padding: 36px 20px; text-align: center; background: #040e1a; margin-bottom: 16px; transition: all 0.2s; }
-  .drop-zone.drag-over { border-color: #4af; background: #0a1f30; }
-  .progress-container { padding: 16px; background: #040e1a; border: 1px solid #0a3050; border-radius: 10px; margin-bottom: 14px; }
-  .result-box { border-radius: 10px; padding: 14px; margin-bottom: 12px; }
-  .result-row { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid #0a2020; font-size: 12px; }
-  .flex-row { display: flex; gap: 8px; }
-  .api-box { background: #040e1a; border: 1px solid #0a3050; border-radius: 10px; padding: 14px 16px; margin-bottom: 16px; }
-  .api-label { font-family: 'Orbitron', sans-serif; font-size: 11px; color: #4a8aaa; letter-spacing: 1px; margin-bottom: 10px; }
-  .api-hint { font-size: 11px; color: #1a4060; margin-top: 8px; }
-  @media (max-width: 500px) { .header-title { font-size: 13px; } }
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#050d14;color:#c8e6ff;font-family:'Rajdhani',sans-serif;min-height:100vh}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(0,80,160,.15) 0%,transparent 60%),radial-gradient(ellipse at 80% 20%,rgba(80,0,160,.1) 0%,transparent 50%);pointer-events:none}
+.header{background:linear-gradient(135deg,#061828 0%,#0a1f35 50%,#061828 100%);border-bottom:2px solid #0a4060;padding:14px 16px;display:flex;align-items:center;gap:12px;box-shadow:0 4px 30px rgba(0,120,255,.15);position:sticky;top:0;z-index:10}
+.header-icon{font-size:28px}
+.header-title{font-family:'Orbitron',sans-serif;font-size:15px;font-weight:900;color:#4af;letter-spacing:3px}
+.header-sub{font-size:10px;color:#4a8aaa;letter-spacing:2px}
+.header-bdk{font-size:10px;color:#fff;letter-spacing:1px;margin-top:2px;font-weight:600}
+.header-right{margin-left:auto;text-align:right}
+.header-count-num{font-size:20px;font-weight:700;color:#4af;font-family:'Orbitron',sans-serif}
+.header-count-label{font-size:9px;color:#4a8aaa;letter-spacing:1px}
+.bdk-banner{background:#0a0a0a;border-bottom:1px solid #222;padding:5px 0;text-align:center;font-size:11px;color:#fff;letter-spacing:2px;font-weight:600}
+.tabs{display:flex;border-bottom:1px solid #0a3050;background:#040e1a;position:sticky;top:88px;z-index:9}
+.tab{flex:1;padding:9px 2px;border:none;cursor:pointer;background:transparent;color:#4a7a9a;font-family:'Orbitron',sans-serif;font-size:8px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;border-bottom:2px solid transparent;transition:all .2s}
+.tab.active{background:#0a2040;color:#4af;border-bottom-color:#4af}
+.rarity-filter{display:flex;gap:5px;padding:8px 12px;background:#040e1a;border-bottom:1px solid #0a2030;flex-wrap:wrap}
+.rarity-btn{padding:3px 9px;border-radius:20px;border:1px solid #1a3050;background:transparent;color:#4a7a9a;cursor:pointer;font-size:11px;font-weight:600;letter-spacing:.5px;font-family:'Rajdhani',sans-serif;transition:all .2s}
+.content{padding:12px;max-width:900px;margin:0 auto}
+.empty-state{text-align:center;padding:50px 20px;color:#2a5070}
+.empty-icon{font-size:44px;margin-bottom:10px}
+.empty-title{font-family:'Orbitron',sans-serif;font-size:12px}
+.empty-sub{font-size:12px;margin-top:6px;color:#1a3040}
+.card{border-radius:8px;padding:11px 13px;margin-bottom:9px}
+.card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px}
+.card-name{font-family:'Orbitron',sans-serif;font-size:12px;font-weight:700}
+.badge{padding:2px 7px;border-radius:12px;font-size:9px;font-weight:700;letter-spacing:.5px}
+.section-group{font-family:'Orbitron',sans-serif;font-size:9px;color:#2a6080;letter-spacing:2px;padding:5px 0 3px;border-bottom:1px solid #0a2030;margin-bottom:8px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;user-select:none}
+.section-group:hover{color:#4a8aaa}
+.chain-tree{margin-top:7px;padding:7px;background:#040e14;border-radius:6px;font-size:11px}
+.chain-row{padding:2px 0;display:flex;align-items:flex-start;gap:5px}
+input,textarea{background:#080f1a;border:1px solid #0a3050;border-radius:8px;color:#c8e6ff;font-family:'Rajdhani',sans-serif;font-size:13px;outline:none;padding:8px 11px;width:100%}
+input::placeholder,textarea::placeholder{color:#2a5070}
+button{cursor:pointer;font-family:'Orbitron',sans-serif;font-weight:700;border-radius:8px;border:none;transition:all .2s}
+.btn-primary{background:#0a3060;border:1px solid #4af;color:#4af;padding:9px 16px;font-size:10px;letter-spacing:1px}
+.btn-success{background:#0a3020;border:1px solid #4f4;color:#4f4;padding:9px 16px;font-size:10px;letter-spacing:1px}
+.btn-warn{background:#1a0a0a;border:1px solid #e84545;color:#e84545;padding:9px 16px;font-size:10px;letter-spacing:1px}
+.info-box{background:#060f1a;border:1px solid #0a2535;border-radius:10px;padding:12px 14px;font-size:12px;color:#2a6080;line-height:1.7;margin-top:14px}
+.info-box-title{color:#4a8aaa;font-weight:700;margin-bottom:5px;letter-spacing:1px;font-size:10px;font-family:'Orbitron',sans-serif}
+.inv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:7px}
+.inv-item{background:#080f1a;border:1px solid #0a2535;border-radius:8px;padding:7px 11px;display:flex;flex-direction:column}
+.drop-zone{border:2px dashed #0a4060;border-radius:12px;padding:32px 20px;text-align:center;background:#040e1a;margin-bottom:14px;transition:all .2s}
+.drop-zone.drag-over{border-color:#4af;background:#0a1f30}
+.result-row{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid #0a2020;font-size:12px}
+.flex-row{display:flex;gap:7px}
+.api-box{background:#040e1a;border:1px solid #0a3050;border-radius:10px;padding:12px 14px;margin-bottom:14px}
+.api-label{font-family:'Orbitron',sans-serif;font-size:10px;color:#4a8aaa;letter-spacing:1px;margin-bottom:8px}
+.update-bar{background:#040e1a;border:1px solid #0a3050;border-radius:8px;padding:10px 14px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;font-size:11px}
+.update-status{color:#2a6080}
+.update-status.ok{color:#4f4}
+.update-status.loading{color:#4a8aaa}
+.update-status.error{color:#e84545}
 </style>
 </head>
 <body>
@@ -69,14 +65,16 @@
   <div class="header-icon">🦕</div>
   <div>
     <div class="header-title">JWA DNA Tracker</div>
-    <div class="header-sub">JURASSIC WORLD ALIVE · COMPANION · pre-launch 0.1.3</div>
+    <div class="header-sub">JURASSIC WORLD ALIVE · COMPANION · v0.1.5</div>
     <div class="header-bdk">Brought to you by The BDK</div>
   </div>
-  <div class="header-count">
+  <div class="header-right">
     <div class="header-count-num" id="creature-count">0</div>
     <div class="header-count-label">TRACKED</div>
   </div>
 </div>
+
+<div class="bdk-banner">✦ BROUGHT TO YOU BY THE BDK ✦</div>
 
 <div class="tabs">
   <button class="tab active" onclick="showTab('owned')">🦕 Owned</button>
@@ -86,13 +84,7 @@
   <button class="tab" onclick="showTab('import')">📋 Import</button>
 </div>
 
-<div id="rarity-filter" class="rarity-filter" style="display:none">
-  <button class="rarity-btn active" onclick="setRarity('All')" style="border-color:#4af;color:#4af;background:#0a2040">All</button>
-  <button class="rarity-btn" onclick="setRarity('Rare')" data-rarity="Rare">Rare</button>
-  <button class="rarity-btn" onclick="setRarity('Epic')" data-rarity="Epic">Epic</button>
-  <button class="rarity-btn" onclick="setRarity('Legendary')" data-rarity="Legendary">Legendary</button>
-  <button class="rarity-btn" onclick="setRarity('Unique')" data-rarity="Unique">Unique</button>
-</div>
+<div id="rarity-filter" class="rarity-filter" style="display:none"></div>
 
 <div class="content">
   <div id="tab-owned"></div>
@@ -103,621 +95,520 @@
 </div>
 
 <script>
-// ── Fusion recipe database ────────────────────────────────────────────────────
-const FUSION_RECIPES = [
-  // RARE
-  { name:"Stegoceratops",   rarity:"Rare", createThreshold:50,  components:[{name:"Stegosaurus",costPerFuse:50},   {name:"Triceratops",costPerFuse:50}] },
-  { name:"Nodopatosaurus",  rarity:"Rare", createThreshold:50,  components:[{name:"Apatosaurus",costPerFuse:200},  {name:"Nodosaurus",costPerFuse:50}] },
-  { name:"Einiasuchus",     rarity:"Rare", createThreshold:50,  components:[{name:"Einiosaurus",costPerFuse:115},  {name:"Nundasuchus",costPerFuse:115}] },
-  { name:"Majundasuchus",   rarity:"Rare", createThreshold:50,  components:[{name:"Majungasaurus",costPerFuse:115},{name:"Nundasuchus",costPerFuse:115}] },
-  { name:"Suchotator",      rarity:"Rare", createThreshold:50,  components:[{name:"Suchomimus",costPerFuse:50},    {name:"Irritator Gen 2",costPerFuse:50}] },
-  { name:"Sarcorixis",      rarity:"Rare", createThreshold:50,  components:[{name:"Sarcosuchus",costPerFuse:200},  {name:"Einiosaurus",costPerFuse:50}] },
-  { name:"Purutaurus",      rarity:"Rare", createThreshold:50,  components:[{name:"Carnotaurus",costPerFuse:115},  {name:"Purussaurus",costPerFuse:115}] },
-  { name:"Wuerhosaurus",    rarity:"Rare", createThreshold:50,  components:[{name:"Stegosaurus",costPerFuse:50},   {name:"Iguanodon",costPerFuse:50}] },
-  // EPIC
-  { name:"Indominus Rex",   rarity:"Epic", createThreshold:150, components:[{name:"Tyrannosaurus Rex",costPerFuse:50}, {name:"Velociraptor",costPerFuse:500}] },
-  { name:"Stegodeus",       rarity:"Epic", createThreshold:150, components:[{name:"Nodopatosaurus",costPerFuse:200},   {name:"Wuerhosaurus",costPerFuse:50}] },
-  { name:"Tragodistis",     rarity:"Epic", createThreshold:150, components:[{name:"Parasaurolophus",costPerFuse:50},   {name:"Amargasaurus",costPerFuse:50}] },
-  { name:"Monostegotops",   rarity:"Epic", createThreshold:150, components:[{name:"Monolophosaurus",costPerFuse:200},  {name:"Stegoceratops",costPerFuse:50}] },
-  { name:"Postimetrodon",   rarity:"Epic", createThreshold:150, components:[{name:"Postosuchus",costPerFuse:115},      {name:"Dimetrodon",costPerFuse:115}] },
-  { name:"Pyrritator",      rarity:"Epic", createThreshold:150, components:[{name:"Majundasuchus",costPerFuse:50},     {name:"Irritator",costPerFuse:200}] },
-  { name:"Spinotahraptor",  rarity:"Epic", createThreshold:150, components:[{name:"Spinosaurus",costPerFuse:50},       {name:"Utahraptor",costPerFuse:50}] },
-  { name:"Diplovenator",    rarity:"Epic", createThreshold:150, components:[{name:"Diplocaulus",costPerFuse:50},       {name:"Monolophosaurus",costPerFuse:50}] },
-  { name:"Carnotarkus",     rarity:"Epic", createThreshold:150, components:[{name:"Purutaurus",costPerFuse:50},        {name:"Wuerhosaurus",costPerFuse:50}] },
-  { name:"Megalosuchus",    rarity:"Epic", createThreshold:150, components:[{name:"Megalosaurus",costPerFuse:70},      {name:"Gorgosuchus",costPerFuse:50}] },
-  // LEGENDARY
-  { name:"Indoraptor",      rarity:"Legendary", createThreshold:200, components:[{name:"Indominus Rex",costPerFuse:50},      {name:"Velociraptor",costPerFuse:2000}] },
-  { name:"Tryostronix",     rarity:"Legendary", createThreshold:200, components:[{name:"Postimetrodon",costPerFuse:50},      {name:"Baryonyx",costPerFuse:50}] },
-  { name:"Thoradolosaur",   rarity:"Legendary", createThreshold:200, components:[{name:"Allosaurus Gen 2",costPerFuse:50},   {name:"Thoracosaurus",costPerFuse:50}] },
-  { name:"Diorajasaur",     rarity:"Legendary", createThreshold:200, components:[{name:"Rajasaurus",costPerFuse:50},         {name:"Triceratops Gen 2",costPerFuse:50}] },
-  { name:"Utarinex",        rarity:"Legendary", createThreshold:200, components:[{name:"Utahsinoraptor",costPerFuse:200},    {name:"Dracorex",costPerFuse:50}] },
-  { name:"Magnapyritor",    rarity:"Legendary", createThreshold:200, components:[{name:"Pyrritator",costPerFuse:50},         {name:"Dimetrodon",costPerFuse:500}] },
-  { name:"Spinotasuchus",   rarity:"Legendary", createThreshold:200, components:[{name:"Spinotahraptor",costPerFuse:50},     {name:"Kaprosuchus",costPerFuse:50}] },
-  { name:"Diloracheirus",   rarity:"Legendary", createThreshold:200, components:[{name:"Diloranosaurus",costPerFuse:50},     {name:"Ouranosaurus",costPerFuse:50}] },
-  { name:"Dracoceratops",   rarity:"Legendary", createThreshold:200, components:[{name:"Dracorex Gen 2",costPerFuse:50},     {name:"Triceratops Gen 2",costPerFuse:50}] },
-  { name:"Ardentismaxima",  rarity:"Legendary", createThreshold:200, components:[{name:"Ardontosaurus",costPerFuse:50},      {name:"Brachiosaurus",costPerFuse:50}] },
-  { name:"Grypolyth",       rarity:"Legendary", createThreshold:200, components:[{name:"Gryposuchus",costPerFuse:50},        {name:"Purrolyth",costPerFuse:200}] },
-  { name:"Skoonasaurus",    rarity:"Legendary", createThreshold:200, components:[{name:"Ankylomoloch",costPerFuse:50},       {name:"Sonorasaurus",costPerFuse:50}] },
-  // UNIQUE
-  { name:"Indoraptor Gen 2",rarity:"Unique", createThreshold:250, components:[{name:"Indominus Rex Gen 2",costPerFuse:50},  {name:"Blue",costPerFuse:50}] },
-  { name:"Tenontorex",      rarity:"Unique", createThreshold:250, components:[{name:"Thoradolosaur",costPerFuse:50},        {name:"Tenontosaurus",costPerFuse:2000}] },
-  { name:"Trykosaurus",     rarity:"Unique", createThreshold:250, components:[{name:"Tryostronix",costPerFuse:50},          {name:"Tyrannosaurus Rex",costPerFuse:2000}] },
-  { name:"Tuoramoloch",     rarity:"Unique", createThreshold:250, components:[{name:"Tuojiangosaurus",costPerFuse:50},      {name:"Parasaurolophus",costPerFuse:2000}] },
-  { name:"Erlikospyx",      rarity:"Unique", createThreshold:250, components:[{name:"Erlikosaurus",costPerFuse:50},         {name:"Spinotasuchus",costPerFuse:50}] },
-  { name:"Geminititan",     rarity:"Unique", createThreshold:250, components:[{name:"Diplodocus",costPerFuse:50},           {name:"Argentinosaurus",costPerFuse:2000}] },
-  { name:"Smilonemys",      rarity:"Unique", createThreshold:250, components:[{name:"Smilodon",costPerFuse:50},             {name:"Carbonemys",costPerFuse:2000}] },
-  { name:"Mammolania",      rarity:"Unique", createThreshold:250, components:[{name:"Mammoth",costPerFuse:50},              {name:"Carbonemys",costPerFuse:2000}] },
-  { name:"Mortem Rex",      rarity:"Unique", createThreshold:250, components:[{name:"Tyrannosaurus Rex",costPerFuse:50},    {name:"Carnotaurus",costPerFuse:2000}] },
-  { name:"Ceramagnus",      rarity:"Unique", createThreshold:250, components:[{name:"Megalonyx",costPerFuse:50},            {name:"Nasutoceratops",costPerFuse:2000}] },
-  { name:"Testacornibus",   rarity:"Unique", createThreshold:250, components:[{name:"Woolly Rhino",costPerFuse:50},         {name:"Nasutoceratops",costPerFuse:2000}] },
-];
-
-const RECIPE_MAP = {};
-FUSION_RECIPES.forEach(r => { RECIPE_MAP[r.name] = r; });
-
-// Which hybrids use each creature as a component
-const USED_IN_MAP = {};
-FUSION_RECIPES.forEach(r => {
-  r.components.forEach(c => {
-    if (!USED_IN_MAP[c.name]) USED_IN_MAP[c.name] = [];
-    USED_IN_MAP[c.name].push(r.name);
-  });
-});
-
+// ─────────────────────────────────────────────────────────────────────────────
+// RARITY CONFIG
+// ─────────────────────────────────────────────────────────────────────────────
+const RARITY_ORDER = ['Common','Rare','Epic','Legendary','Unique','Apex','Omega'];
 const RARITY_CONFIG = {
-  Rare:      {color:"#4a9eff", bg:"#0d1f3c", badge:"#1a3a6b"},
-  Epic:      {color:"#f5d623", bg:"#2a2000", badge:"#5a4a00"},
-  Legendary: {color:"#e84545", bg:"#2a0a0a", badge:"#5a1a1a"},
-  Unique:    {color:"#4af594", bg:"#0d2a1a", badge:"#1a5a35"},
+  Common:    {color:'#aaaaaa',bg:'#111',badge:'#333',threshold:50},
+  Rare:      {color:'#4a9eff',bg:'#0d1f3c',badge:'#1a3a6b',threshold:100},
+  Epic:      {color:'#f5d623',bg:'#2a2000',badge:'#5a4a00',threshold:150},
+  Legendary: {color:'#e84545',bg:'#2a0a0a',badge:'#5a1a1a',threshold:200},
+  Unique:    {color:'#4af594',bg:'#0d2a1a',badge:'#1a5a35',threshold:250},
+  Apex:      {color:'#ff6a00',bg:'#2a1500',badge:'#5a2a00',threshold:300},
+  Omega:     {color:'#cc44ff',bg:'#1a0a2a',badge:'#3a1a5a',threshold:500},
 };
 
-const ALL_COMPONENTS = [...new Set(FUSION_RECIPES.flatMap(r => r.components.map(c => c.name)))].sort();
+// ─────────────────────────────────────────────────────────────────────────────
+// CREATURE DATABASE — injected automatically by GitHub Action on the 15th
+// Do not edit manually. Run the scraper to update.
+// ─────────────────────────────────────────────────────────────────────────────
+// @@DB_START@@
+let creatureDB = {};
+const DB_UPDATED = 'never';
+// @@DB_END@@
 
-// ── Name normalization for Gemini output matching ─────────────────────────────
-function normalizeName(name) {
-  return name.toLowerCase()
-    .replace(/\s+/g, ' ')
-    .replace(/gen\./g, 'gen')
-    .replace(/[^a-z0-9 ]/g, '')
-    .trim();
-}
+// ─────────────────────────────────────────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────────────────────────────────────────
+let dnaInventory = JSON.parse(localStorage.getItem('jwa-dna') || '{}');
+let apiKey       = localStorage.getItem('jwa-gemini-key') || '';
+let activeTab    = 'owned';
+let activeRarity = 'All';
+let collapsed    = JSON.parse(localStorage.getItem('jwa-collapsed') || '{}');
 
-const NORMALIZED_INVENTORY_KEYS = {}; // built at runtime
+function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
 
-function buildNormalizedKeys(inventory) {
-  Object.keys(inventory).forEach(k => {
-    NORMALIZED_INVENTORY_KEYS[normalizeName(k)] = k;
+// ─────────────────────────────────────────────────────────────────────────────
+// INDEXES — built from creatureDB for fast lookup
+// ─────────────────────────────────────────────────────────────────────────────
+let HYBRIDS = {};   // {name: creatureData} — only hybrids
+let USED_IN = {};   // {componentName: [hybridName, ...]}
+
+function buildIndexes() {
+  HYBRIDS = {};
+  USED_IN = {};
+  Object.entries(creatureDB).forEach(([name, data]) => {
+    if (data.isHybrid && data.components?.length) {
+      HYBRIDS[name] = data;
+      data.components.forEach(c => {
+        if (!USED_IN[c.name]) USED_IN[c.name] = [];
+        if (!USED_IN[c.name].includes(name)) USED_IN[c.name].push(name);
+      });
+    }
   });
 }
 
-function matchInventoryName(rawName) {
-  // Try exact first
-  if (dnaInventory[rawName] !== undefined) return rawName;
-  // Try normalized
-  const norm = normalizeName(rawName);
-  if (NORMALIZED_INVENTORY_KEYS[norm]) return NORMALIZED_INVENTORY_KEYS[norm];
-  return rawName; // fallback to original
+function getThreshold(rarity) {
+  return (RARITY_CONFIG[rarity] || {threshold:200}).threshold;
 }
 
-// ── Chain fusion engine ───────────────────────────────────────────────────────
-function fusesAvailableFor(componentName, costPerFuse, inventory, depth) {
-  if (depth > 6) return 0;
-  const have = inventory[componentName] || 0;
+// ─────────────────────────────────────────────────────────────────────────────
+// FUSION ENGINE
+// ─────────────────────────────────────────────────────────────────────────────
+function fusesAvailable(compName, costPerFuse, depth) {
+  if (depth > 6 || costPerFuse <= 0) return 0;
+  const have = dnaInventory[compName] || 0;
   if (have > 0) return Math.floor(have / costPerFuse);
-
-  // Not in inventory — is it a hybrid we could create?
-  const recipe = RECIPE_MAP[componentName];
+  const recipe = HYBRIDS[compName];
   if (!recipe) return 0;
-
-  const ev = evaluateFusion(recipe, inventory, depth + 1);
-  if (ev.canCreate) return Math.floor(recipe.createThreshold / costPerFuse);
-  return 0;
+  const ev = evaluateFusion(recipe, depth + 1);
+  return ev.canCreate ? Math.floor(getThreshold(recipe.rarity) / costPerFuse) : 0;
 }
 
-function evaluateFusion(recipe, inventory, depth = 0) {
-  const alreadyHave = (inventory[recipe.name] || 0) > 0;
-
-  const components = recipe.components.map(c => {
-    const have = inventory[c.name] || 0;
-    const fusesFromInventory = have > 0 ? Math.floor(have / c.costPerFuse) : 0;
-    const source = have > 0 ? 'inventory' : RECIPE_MAP[c.name] ? 'hybrid' : 'base';
-    const fusesFromChain = fusesAvailableFor(c.name, c.costPerFuse, inventory, depth);
-    return { ...c, have, source, fusesFromInventory, fusesAvailable: fusesFromChain };
+function evaluateFusion(data, depth = 0) {
+  const threshold  = getThreshold(data.rarity);
+  const alreadyHave = (dnaInventory[data.name] || 0) > 0;
+  const components = (data.components || []).map(c => {
+    const have = dnaInventory[c.name] || 0;
+    const fuses = fusesAvailable(c.name, c.costPerFuse, depth);
+    return {...c, have, fusesAvailable: fuses};
   });
-
-  const fusesAvailable = Math.min(...components.map(c => c.fusesAvailable));
-  const guaranteedDNA = fusesAvailable * 10;
-  const canCreate = guaranteedDNA >= recipe.createThreshold;
-  const pctToCreate = Math.min(100, Math.round((guaranteedDNA / recipe.createThreshold) * 100));
-  const needsChain = components.some(c => c.source === 'hybrid' && c.have === 0);
-
-  return { alreadyHave, canCreate, fusesAvailable, guaranteedDNA, pctToCreate, components, needsChain };
+  const fuses = components.length ? Math.min(...components.map(c => c.fusesAvailable)) : 0;
+  const dnaGuaranteed = fuses * 10;
+  const canCreate = dnaGuaranteed >= threshold;
+  const pct = Math.min(100, Math.round((dnaGuaranteed / threshold) * 100));
+  return {alreadyHave, canCreate, fusesAvailable: fuses, dnaGuaranteed, pct, components, threshold};
 }
 
-// Build full chain tree for display
-function buildChainTree(componentName, costPerFuse, inventory, depth) {
-  const have = inventory[componentName] || 0;
-  const recipe = RECIPE_MAP[componentName];
-  const fusesAvail = fusesAvailableFor(componentName, costPerFuse, inventory, 0);
-  const node = { name: componentName, have, costPerFuse, fusesAvail, children: [], isHybrid: !!recipe };
-
+function buildChainTree(compName, costPerFuse, depth) {
+  const have   = dnaInventory[compName] || 0;
+  const recipe = HYBRIDS[compName];
+  const fuses  = fusesAvailable(compName, costPerFuse, 0);
+  const node   = {name:compName, have, costPerFuse, fuses, children:[], isHybrid:!!recipe};
   if (recipe && depth < 4) {
-    recipe.components.forEach(c => {
-      node.children.push(buildChainTree(c.name, c.costPerFuse, inventory, depth + 1));
-    });
+    (recipe.components||[]).forEach(c => node.children.push(buildChainTree(c.name, c.costPerFuse, depth+1)));
   }
   return node;
 }
 
 function renderTreeNode(node, indent) {
-  const ok = node.fusesAvail > 0;
-  const icon = ok ? '✓' : '✗';
+  const ok    = node.fuses > 0;
   const color = ok ? '#4f4' : '#f44';
-  const prefix = '&nbsp;'.repeat(indent * 4);
-  const dnaInfo = node.have > 0
-    ? `${node.have.toLocaleString()} DNA → ${node.fusesAvail} fuses`
-    : node.isHybrid && node.fusesAvail > 0
-    ? `(create first → ${node.fusesAvail} fuses)`
-    : `missing`;
-
-  let html = `<div class="chain-row" style="padding-left:${indent*14}px;${indent>0?'border-left:1px solid #0a3050;margin-left:'+(indent*6)+'px':''}">
-    <span style="color:${color};flex-shrink:0">${icon}</span>
+  const info  = node.have > 0
+    ? `${node.have.toLocaleString()} DNA → ${node.fuses} fuses`
+    : node.isHybrid && node.fuses > 0 ? '(create first)' : 'missing';
+  let html = `<div class="chain-row" style="padding-left:${indent*13}px">
+    <span style="color:${color};flex-shrink:0">${ok?'✓':'✗'}</span>
     <span style="color:${ok?'#4a9aaa':'#6a4a4a'}">${node.name}</span>
-    <span style="color:#2a6080;margin-left:auto;font-size:10px;white-space:nowrap">${dnaInfo}</span>
+    <span style="color:#2a6080;margin-left:auto;font-size:10px;white-space:nowrap">${info}</span>
   </div>`;
-
-  if (node.children.length) {
-    node.children.forEach(child => { html += renderTreeNode(child, indent + 1); });
-  }
+  node.children.forEach(ch => { html += renderTreeNode(ch, indent+1); });
   return html;
 }
 
-// ── App state ─────────────────────────────────────────────────────────────────
-let dnaInventory = JSON.parse(localStorage.getItem('jwa-dna') || '{}');
-let apiKey = localStorage.getItem('jwa-gemini-key') || '';
-let activeTab = 'owned';
-let activeRarity = 'All';
-let importPreview = null;
-
-function init() {
-  buildNormalizedKeys(dnaInventory);
-  renderAll();
-}
-
+// ─────────────────────────────────────────────────────────────────────────────
+// UI HELPERS
+// ─────────────────────────────────────────────────────────────────────────────
 function saveInventory() {
   localStorage.setItem('jwa-dna', JSON.stringify(dnaInventory));
-  buildNormalizedKeys(dnaInventory);
   document.getElementById('creature-count').textContent = Object.keys(dnaInventory).length;
+}
+
+function toggleSection(key) {
+  collapsed[key] = !collapsed[key];
+  localStorage.setItem('jwa-collapsed', JSON.stringify(collapsed));
+  renderAll();
 }
 
 function showTab(tab) {
   activeTab = tab;
   const tabs = ['owned','upgradable','close','upload','import'];
   document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', tabs[i] === tab));
-  tabs.forEach(t => { document.getElementById('tab-'+t).style.display = t === tab ? 'block' : 'none'; });
-  document.getElementById('rarity-filter').style.display = tab === 'close' ? 'flex' : 'none';
+  tabs.forEach(t => { document.getElementById('tab-'+t).style.display = t===tab?'block':'none'; });
+  const showFilter = tab==='close'||tab==='upgradable';
+  document.getElementById('rarity-filter').style.display = showFilter?'flex':'none';
+  if (showFilter) renderRarityFilter();
   renderAll();
+}
+
+function renderRarityFilter() {
+  const rarities = ['All',...RARITY_ORDER];
+  document.getElementById('rarity-filter').innerHTML = rarities.map(r => {
+    const cfg = RARITY_CONFIG[r];
+    const active = r === activeRarity;
+    return `<button class="rarity-btn" data-rarity="${r}" onclick="setRarity('${r}')"
+      style="border-color:${active?(cfg?cfg.color:'#4af'):'#1a3050'};color:${active?(cfg?cfg.color:'#4af'):'#4a7a9a'};background:${active?(cfg?cfg.badge:'#0a2040'):'transparent'}">${r}</button>`;
+  }).join('');
 }
 
 function setRarity(r) {
   activeRarity = r;
-  document.querySelectorAll('.rarity-btn').forEach(b => {
-    const br = b.dataset.rarity || 'All';
-    const cfg = RARITY_CONFIG[br];
-    const isActive = br === r || (r === 'All' && !b.dataset.rarity);
-    b.style.borderColor = isActive ? (cfg ? cfg.color : '#4af') : '#1a3050';
-    b.style.color = isActive ? (cfg ? cfg.color : '#4af') : '#4a7a9a';
-    b.style.background = isActive ? (cfg ? cfg.badge : '#0a2040') : 'transparent';
-  });
+  renderRarityFilter();
   renderAll();
 }
 
 function renderAll() {
   document.getElementById('creature-count').textContent = Object.keys(dnaInventory).length;
-  if (activeTab === 'owned') renderOwned();
-  else if (activeTab === 'upgradable') renderUpgradable();
-  else if (activeTab === 'close') renderClose();
-  else if (activeTab === 'upload') renderUpload();
-  else if (activeTab === 'import') renderImport();
+  if      (activeTab==='owned')     renderOwned();
+  else if (activeTab==='upgradable')renderUpgradable();
+  else if (activeTab==='close')     renderClose();
+  else if (activeTab==='upload')    renderUpload();
+  else if (activeTab==='import')    renderImport();
 }
 
-// ── OWNED TAB ─────────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// UPDATE STATUS BAR — shown in owned tab
+// ─────────────────────────────────────────────────────────────────────────────
+function updateBarHTML() {
+  const count = Object.keys(creatureDB).length;
+  return `<div class="update-bar">
+    <span class="update-status ${count>0?'ok':'error'}">
+      ${count>0 ? `✓ ${count} creatures · db: ${DB_UPDATED}` : '⚠ No creature data yet'}
+    </span>
+    <span style="color:#1a4060;font-size:10px">auto-updates on the 15th</span>
+  </div>`;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// OWNED TAB
+// ─────────────────────────────────────────────────────────────────────────────
 function renderOwned() {
   const el = document.getElementById('tab-owned');
-  const items = Object.entries(dnaInventory).sort((a,b) => a[0].localeCompare(b[0]));
-  const hybrids = items.filter(([n]) => RECIPE_MAP[n]);
-  const bases = items.filter(([n]) => !RECIPE_MAP[n]);
+  const items = Object.entries(dnaInventory);
 
-  if (items.length === 0) {
-    el.innerHTML = `<div class="empty-state"><div class="empty-icon">🦕</div><div class="empty-title">NO CREATURES YET</div><div class="empty-sub">Upload screenshots or use the Import tab</div></div>`;
+  if (!items.length) {
+    el.innerHTML = updateBarHTML() + `<div class="empty-state"><div class="empty-icon">🦕</div>
+      <div class="empty-title">NO CREATURES YET</div>
+      <div class="empty-sub">Upload screenshots or use the Import tab</div></div>`;
     return;
   }
 
-  const renderGrid = (list, color) => list.map(([name, dna]) => {
-    const usedIn = USED_IN_MAP[name] || [];
-    const usedInHtml = usedIn.length ? `<div style="font-size:9px;color:#2a5060;margin-top:2px">→ ${usedIn.slice(0,2).join(', ')}${usedIn.length>2?' +more':''}</div>` : '';
-    return `<div class="inv-item" style="flex-direction:column;align-items:flex-start;border-color:${color}30">
-      <div style="display:flex;justify-content:space-between;width:100%">
+  // Sort by rarity tier desc, then name
+  items.sort((a,b) => {
+    const ra = creatureDB[a[0]] ? RARITY_ORDER.indexOf(creatureDB[a[0]].rarity) : -1;
+    const rb = creatureDB[b[0]] ? RARITY_ORDER.indexOf(creatureDB[b[0]].rarity) : -1;
+    return rb!==ra ? rb-ra : a[0].localeCompare(b[0]);
+  });
+
+  const hybrids = items.filter(([n]) => HYBRIDS[n]);
+  const bases   = items.filter(([n]) => !HYBRIDS[n]);
+
+  const renderGrid = list => list.map(([name, dna]) => {
+    const data    = creatureDB[name];
+    const rarity  = data?.rarity;
+    const cfg     = RARITY_CONFIG[rarity] || {};
+    const color   = cfg.color || '#4a9aaa';
+    const usedIn  = USED_IN[name] || [];
+    const uHtml   = usedIn.length ? `<div style="font-size:9px;color:#2a5060;margin-top:1px">→ ${usedIn.slice(0,2).join(', ')}${usedIn.length>2?' +more':''}</div>` : '';
+    return `<div class="inv-item" style="border-color:${color}30">
+      <div style="display:flex;justify-content:space-between">
         <span style="font-size:11px;color:${color}">${name}</span>
         <span style="font-size:13px;font-weight:700;color:#4af;font-family:'Orbitron',sans-serif">${dna.toLocaleString()}</span>
-      </div>
-      ${usedInHtml}
+      </div>${uHtml}
     </div>`;
   }).join('');
 
-  el.innerHTML = `
-    ${hybrids.length > 0 ? `<div class="section-group">⚗️ HYBRIDS IN COLLECTION (${hybrids.length})</div>
-    <div class="inv-grid" style="margin-bottom:16px">${renderGrid(hybrids, '#4af594')}</div>` : ''}
-    ${bases.length > 0 ? `<div class="section-group">🦎 BASE CREATURES (${bases.length})</div>
-    <div class="inv-grid">${renderGrid(bases, '#4a9aaa')}</div>` : ''}
-  `;
-}
-
-// ── UPGRADABLE TAB ────────────────────────────────────────────────────────────
-function renderUpgradable() {
-  const el = document.getElementById('tab-upgradable');
-
-  // Find owned creatures that are ingredients for hybrids not yet in collection
-  const results = [];
-  Object.keys(dnaInventory).forEach(creatureName => {
-    const usedIn = USED_IN_MAP[creatureName] || [];
-    usedIn.forEach(hybridName => {
-      if (dnaInventory[hybridName]) return; // already have the hybrid
-      const recipe = RECIPE_MAP[hybridName];
-      if (!recipe) return;
-      const ev = evaluateFusion(recipe, dnaInventory);
-      // Only show if this creature specifically contributes (has DNA)
-      const myComponent = ev.components.find(c => c.name === creatureName);
-      if (!myComponent || myComponent.have === 0) return;
-      // Avoid duplicates
-      if (!results.find(r => r.recipe.name === hybridName)) {
-        results.push({ recipe, ev, triggerCreature: creatureName });
-      }
-    });
+  let hybridHTML = '';
+  [...RARITY_ORDER].reverse().forEach(rarity => {
+    const group = hybrids.filter(([n]) => creatureDB[n]?.rarity === rarity);
+    if (!group.length) return;
+    const cfg = RARITY_CONFIG[rarity] || {};
+    const key = 'owned-h-'+rarity;
+    hybridHTML += `<div class="section-group" onclick="toggleSection('${key}')" style="color:${cfg.color}">
+      ${rarity.toUpperCase()} HYBRIDS (${group.length}) <span>${collapsed[key]?'▼':'▲'}</span>
+    </div>${collapsed[key]?'':`<div class="inv-grid" style="margin-bottom:14px">${renderGrid(group)}</div>`}`;
   });
 
-  results.sort((a,b) => b.ev.pctToCreate - a.ev.pctToCreate);
+  const bKey = 'owned-base';
+  el.innerHTML = updateBarHTML() + hybridHTML +
+    (bases.length ? `<div class="section-group" onclick="toggleSection('${bKey}')">
+        🦎 BASE CREATURES (${bases.length}) <span>${collapsed[bKey]?'▼':'▲'}</span>
+      </div>${collapsed[bKey]?'':`<div class="inv-grid">${renderGrid(bases)}</div>`}` : '');
+}
 
-  if (results.length === 0) {
-    el.innerHTML = `<div class="empty-state"><div class="empty-icon">⬆️</div><div class="empty-title">NOTHING UPGRADABLE YET</div><div class="empty-sub">Your owned creatures aren't feeding into any available hybrids</div></div>`;
+// ─────────────────────────────────────────────────────────────────────────────
+// UPGRADABLE TAB
+// ─────────────────────────────────────────────────────────────────────────────
+function renderUpgradable() {
+  const el = document.getElementById('tab-upgradable');
+  const results = [];
+
+  Object.entries(HYBRIDS).forEach(([name, data]) => {
+    if (dnaInventory[name]) return; // already have it
+    if (activeRarity !== 'All' && data.rarity !== activeRarity) return;
+    const ev = evaluateFusion(data);
+    // All components must be owned AND 75%+ progress
+    const allOwned = ev.components.every(c => (dnaInventory[c.name]||0) > 0);
+    if (!allOwned || ev.pct < 75) return;
+    results.push({name, data, ev});
+  });
+
+  results.sort((a,b) => b.ev.pct - a.ev.pct);
+
+  if (!results.length) {
+    el.innerHTML = `<div class="empty-state"><div class="empty-icon">⬆️</div>
+      <div class="empty-title">NOTHING UPGRADABLE YET</div>
+      <div class="empty-sub">Need all components owned + 75% DNA progress</div></div>`;
     return;
   }
 
-  el.innerHTML = `<div class="section-group">${results.length} HYBRIDS YOUR CREATURES FEED INTO</div>` +
-    results.map(({recipe, ev}) => {
-      const cfg = RARITY_CONFIG[recipe.rarity];
-      const canCreate = ev.canCreate;
-      return `<div class="card" style="background:linear-gradient(135deg,${cfg.bg} 0%,#060f1a 100%);border:1px solid ${canCreate?cfg.color+'60':cfg.color+'25'};border-left:3px solid ${canCreate?cfg.color:cfg.color+'50'}">
+  el.innerHTML = `<div class="section-group">${results.length} HYBRIDS READY TO PUSH</div>` +
+    results.map(({name, data, ev}) => {
+      const cfg = RARITY_CONFIG[data.rarity] || {};
+      return `<div class="card" style="background:linear-gradient(135deg,${cfg.bg} 0%,#060f1a 100%);border:1px solid ${ev.canCreate?cfg.color+'60':cfg.color+'25'};border-left:3px solid ${ev.canCreate?cfg.color:cfg.color+'50'}">
         <div class="card-header">
-          <div class="card-name" style="color:${cfg.color}">${recipe.name}</div>
-          <div style="display:flex;gap:6px;align-items:center">
-            ${canCreate ? `<span style="color:#4f4;font-size:11px;font-weight:700">READY</span>` : `<span style="font-size:12px;color:${cfg.color};font-weight:700">${ev.pctToCreate}%</span>`}
-            <span class="badge" style="background:${cfg.badge};color:${cfg.color}">${recipe.rarity.toUpperCase()}</span>
+          <div class="card-name" style="color:${cfg.color}">${name}</div>
+          <div style="display:flex;gap:5px;align-items:center">
+            ${ev.canCreate?`<span style="color:#4f4;font-size:11px;font-weight:700">READY</span>`:`<span style="font-size:12px;color:${cfg.color};font-weight:700">${ev.pct}%</span>`}
+            <span class="badge" style="background:${cfg.badge};color:${cfg.color}">${data.rarity.toUpperCase()}</span>
           </div>
         </div>
-        <div class="chain-tree">
-          ${ev.components.map(c => {
-            const ok = c.fusesAvailable > 0;
-            const dnaInfo = c.have > 0 ? `${c.have.toLocaleString()} → ${c.fusesAvailable} fuses @ ${c.costPerFuse}/fuse`
-              : c.source === 'hybrid' ? `(create first)` : `missing`;
-            return `<div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid #0a2030;font-size:11px">
-              <span style="color:${ok?'#4a9aaa':'#6a4a4a'}">${ok?'✓':'✗'} ${c.name}</span>
-              <span style="color:#2a6080;font-size:10px">${dnaInfo}</span>
-            </div>`;
-          }).join('')}
-        </div>
-        <div style="font-size:10px;color:#2a6080;margin-top:6px">${ev.fusesAvailable} fuses possible → ${ev.guaranteedDNA} DNA guaranteed · need ${recipe.createThreshold}</div>
+        <div class="chain-tree">${ev.components.map(c=>`<div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid #0a2030;font-size:11px">
+            <span style="color:${c.fusesAvailable>0?'#4a9aaa':'#6a4a4a'}">${c.fusesAvailable>0?'✓':'✗'} ${c.name}</span>
+            <span style="color:#2a6080;font-size:10px">${c.have.toLocaleString()} → ${c.fusesAvailable} fuses</span>
+          </div>`).join('')}</div>
+        <div style="font-size:10px;color:#2a6080;margin-top:5px">${ev.fusesAvailable} fuses → ${ev.dnaGuaranteed} DNA · need ${ev.threshold}</div>
       </div>`;
     }).join('');
 }
 
-// ── CLOSE TAB — full chain tree display ───────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// CLOSE TAB
+// ─────────────────────────────────────────────────────────────────────────────
 function renderClose() {
-  const filtered = FUSION_RECIPES.filter(r => activeRarity === 'All' || r.rarity === activeRarity);
-  const evaluated = filtered
-    .map(r => ({ recipe: r, ev: evaluateFusion(r, dnaInventory) }))
-    .filter(({ev}) => !ev.alreadyHave && ev.pctToCreate >= 10)
-    .sort((a,b) => b.ev.pctToCreate - a.ev.pctToCreate);
-
   const el = document.getElementById('tab-close');
+  const evaluated = Object.entries(HYBRIDS)
+    .filter(([,d]) => activeRarity==='All' || d.rarity===activeRarity)
+    .map(([name,data]) => ({name, data, ev:evaluateFusion(data)}))
+    .filter(({ev}) => !ev.alreadyHave && ev.pct >= 10)
+    .sort((a,b) => b.ev.pct - a.ev.pct);
 
-  if (evaluated.length === 0) {
-    el.innerHTML = `<div class="empty-state"><div class="empty-icon">⚡</div><div class="empty-title">NOTHING IN RANGE YET</div><div class="empty-sub">Add DNA to see what you're close to creating</div></div>`;
+  if (!evaluated.length) {
+    el.innerHTML = `<div class="empty-state"><div class="empty-icon">⚡</div>
+      <div class="empty-title">NOTHING IN RANGE</div>
+      <div class="empty-sub">Add DNA to see what you're close to creating</div></div>`;
     return;
   }
 
   const ready = evaluated.filter(({ev}) => ev.canCreate);
   const close = evaluated.filter(({ev}) => !ev.canCreate);
-
   let html = '';
 
-  if (ready.length > 0) {
-    html += `<div class="section-group">✅ GUARANTEED CREATABLE NOW (${ready.length})</div>`;
-    html += ready.map(({recipe, ev}) => renderCloseCard(recipe, ev)).join('');
-  }
+  const renderSection = (list, label) => {
+    if (!list.length) return '';
+    let s = `<div class="section-group">${label} (${list.length})</div>`;
+    [...RARITY_ORDER].reverse().forEach(rarity => {
+      const group = list.filter(({data}) => data.rarity === rarity);
+      if (!group.length) return;
+      const cfg = RARITY_CONFIG[rarity] || {};
+      const key = `close-${label}-${rarity}`;
+      s += `<div class="section-group" onclick="toggleSection('${key}')" style="color:${cfg.color};padding-left:8px">
+        ${rarity} (${group.length}) <span>${collapsed[key]?'▼':'▲'}</span>
+      </div>`;
+      if (!collapsed[key]) s += group.map(({name,data,ev}) => renderCloseCard(name,data,ev)).join('');
+    });
+    return s;
+  };
 
-  if (close.length > 0) {
-    html += `<div class="section-group">⚡ IN PROGRESS (${close.length})</div>`;
-    html += close.map(({recipe, ev}) => renderCloseCard(recipe, ev)).join('');
-  }
-
+  html += renderSection(ready, '✅ READY TO CREATE');
+  html += renderSection(close, '⚡ IN PROGRESS');
   el.innerHTML = html;
 }
 
-function renderCloseCard(recipe, ev) {
-  const cfg = RARITY_CONFIG[recipe.rarity];
-
-  // Build full chain trees for each component
-  const treeHtml = recipe.components.map(c => {
-    const tree = buildChainTree(c.name, c.costPerFuse, dnaInventory, 0);
-    return renderTreeNode(tree, 0);
-  }).join('<div style="height:1px;background:#0a2030;margin:4px 0"></div>');
-
+function renderCloseCard(name, data, ev) {
+  const cfg = RARITY_CONFIG[data.rarity] || {};
+  const tree = (data.components||[]).map(c => renderTreeNode(buildChainTree(c.name, c.costPerFuse, 0), 0)).join('<div style="height:1px;background:#0a2030;margin:3px 0"></div>');
   return `<div class="card" style="background:linear-gradient(135deg,${cfg.bg} 0%,#060f1a 100%);border:1px solid ${cfg.color}30;border-left:3px solid ${ev.canCreate?cfg.color:cfg.color+'60'}">
     <div class="card-header">
-      <div class="card-name" style="color:${cfg.color}">${recipe.name}</div>
-      <div style="display:flex;gap:6px;align-items:center">
-        <span style="font-size:12px;color:${ev.canCreate?'#4f4':cfg.color};font-weight:700">${ev.canCreate?'✅ READY':ev.pctToCreate+'%'}</span>
-        <span class="badge" style="background:${cfg.badge};color:${cfg.color}">${recipe.rarity.toUpperCase()}</span>
+      <div class="card-name" style="color:${cfg.color}">${name}</div>
+      <div style="display:flex;gap:5px;align-items:center">
+        <span style="font-size:12px;color:${ev.canCreate?'#4f4':cfg.color};font-weight:700">${ev.canCreate?'✅ READY':ev.pct+'%'}</span>
+        <span class="badge" style="background:${cfg.badge};color:${cfg.color}">${data.rarity.toUpperCase()}</span>
       </div>
     </div>
-    <div class="chain-tree">${treeHtml}</div>
-    <div style="font-size:10px;color:#2a6080;margin-top:6px">
-      ${ev.fusesAvailable} fuses possible → ${ev.guaranteedDNA} DNA guaranteed · need ${recipe.createThreshold} to unlock
-      ${ev.needsChain ? ' · ⛓ requires creating intermediate hybrid first' : ''}
-    </div>
+    <div class="chain-tree">${tree}</div>
+    <div style="font-size:10px;color:#2a6080;margin-top:5px">${ev.fusesAvailable} fuses → ${ev.dnaGuaranteed} DNA · need ${ev.threshold}</div>
   </div>`;
 }
 
-// ── UPLOAD TAB ────────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// UPLOAD TAB
+// ─────────────────────────────────────────────────────────────────────────────
 function renderUpload() {
-  const savedKey = localStorage.getItem('jwa-gemini-key') || '';
-  if (savedKey) apiKey = savedKey;
-  const keySaved = !!savedKey;
+  const saved = localStorage.getItem('jwa-gemini-key') || '';
+  if (saved) apiKey = saved;
   document.getElementById('tab-upload').innerHTML = `
     <div class="api-box">
       <div class="api-label">GEMINI API KEY</div>
-      ${keySaved ? `
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-          <div style="flex:1;background:#080f1a;border:1px solid #4f4;border-radius:8px;padding:9px 12px;font-family:monospace;font-size:12px;color:#4f4;letter-spacing:3px">●●●●●●●●●●●●●●●● ✓ SAVED</div>
-          <button class="btn-primary" style="white-space:nowrap;padding:9px 14px;font-size:10px" onclick="clearApiKey()">CHANGE</button>
-        </div>` : `
-        <div class="flex-row" style="margin-bottom:8px">
-          <input type="password" id="api-key-input" placeholder="Paste your Gemini API key..." style="font-family:monospace;font-size:12px;flex:1">
+      ${saved ? `<div style="display:flex;align-items:center;gap:7px;margin-bottom:7px">
+          <div style="flex:1;background:#080f1a;border:1px solid #4f4;border-radius:8px;padding:8px 11px;font-family:monospace;font-size:12px;color:#4f4;letter-spacing:3px">●●●●●●●●●●●● ✓ SAVED</div>
+          <button class="btn-primary" onclick="clearApiKey()" style="padding:8px 12px;font-size:9px">CHANGE</button>
+        </div>`
+        : `<div class="flex-row" style="margin-bottom:7px">
+          <input type="password" id="api-key-input" placeholder="Paste your Gemini API key...">
           <button class="btn-success" onclick="saveApiKey()" style="white-space:nowrap">SAVE</button>
         </div>`}
-      <div class="api-hint">Free from aistudio.google.com · Stored in your browser only</div>
-      <button class="btn-primary" style="margin-top:10px;width:100%" onclick="testApiKey()">TEST API KEY</button>
-      <div id="api-test-result" style="margin-top:8px;font-size:12px;text-align:center"></div>
+      <div style="font-size:11px;color:#1a4060">Free from aistudio.google.com · Stored locally only</div>
+      <button class="btn-primary" style="margin-top:9px;width:100%" onclick="testApiKey()">TEST KEY</button>
+      <div id="api-test-result" style="margin-top:7px;font-size:12px;text-align:center"></div>
     </div>
-    <div class="drop-zone" id="drop-zone" ondrop="handleDrop(event)" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)">
-      <div style="font-size:40px;margin-bottom:10px">📸</div>
-      <div style="font-family:'Orbitron',sans-serif;font-size:13px;color:#4af;margin-bottom:8px">DROP SCREENSHOTS HERE</div>
-      <div style="font-size:12px;color:#2a6080;margin-bottom:14px">or tap the button below</div>
-      <button id="select-btn" class="${keySaved?'btn-primary':'btn-disabled'}" onclick="if(apiKey){document.getElementById('file-input').click();}else{alert('Save your Gemini API key first.');}">
-        ${keySaved?'SELECT IMAGES':'SAVE API KEY FIRST'}
-      </button>
-      <input type="file" id="file-input" accept="image/*" multiple style="display:none">
+    <div class="drop-zone" id="drop-zone"
+      ondrop="handleDrop(event)" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)">
+      <div style="font-size:36px;margin-bottom:8px">📸</div>
+      <div style="font-family:'Orbitron',sans-serif;font-size:12px;color:#4af;margin-bottom:6px">DROP SCREENSHOTS HERE</div>
+      <div style="font-size:11px;color:#2a6080;margin-bottom:12px">or tap to select files</div>
+      <button class="btn-primary" onclick="${saved?`document.getElementById('file-input').click()`:'alert(\"Save your API key first\")'}" style="${saved?'':'opacity:.4'}">SELECT FILES</button>
+      <input type="file" id="file-input" accept="image/*" multiple style="display:none" onchange="handleFiles(this.files)">
     </div>
-    <div id="upload-progress" style="display:none" class="progress-container">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-        <span style="font-family:'Orbitron',sans-serif;font-size:11px;color:#4af;letter-spacing:2px" id="progress-status">⚙ ANALYZING...</span>
-        <span style="font-family:'Orbitron',sans-serif;font-size:13px;color:#4af;font-weight:700" id="progress-text">0 / 0</span>
-      </div>
-      <div style="height:10px;background:#0a2030;border-radius:5px;overflow:hidden;margin-bottom:8px">
-        <div id="progress-bar" style="height:100%;border-radius:5px;background:linear-gradient(90deg,#0a6aff,#4af);transition:width 0.4s;box-shadow:0 0 10px #4af8;width:0%"></div>
-      </div>
-      <div style="display:flex;justify-content:space-between;font-size:11px;color:#2a6080">
-        <span id="progress-current" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:65%"></span>
-        <span id="progress-eta"></span>
-      </div>
-      <div id="progress-log" style="margin-top:10px;max-height:160px;overflow-y:auto;font-size:11px"></div>
-    </div>
-    <div id="upload-results"></div>
-    <div class="info-box">
-      <div class="info-box-title">TIPS</div>
-      Screenshot your JWA collection screen showing creature cards with DNA counts. Screenshot BOTH your base creatures AND any hybrids you've already created — the app uses hybrid DNA to know which ones you own.
-      <div style="margin-top:10px;padding:8px;background:#1a0a0a;border:1px solid #4a2020;border-radius:6px;font-size:11px;color:#8a6060;line-height:1.6">
-        ⚠️ WARNING: Not to be used by
-        <span style="background:#FFCB05;color:#00274C;padding:1px 5px;border-radius:3px;font-weight:700">Michigan</span>
-        or
-        <span style="background:#AA0000;color:#FFFFFF;padding:1px 5px;border-radius:3px;font-weight:700">49er</span>
-        fans.
-      </div>
-      <div style="margin-top:6px;padding:8px;background:#1a0a1a;border:1px solid #4a2060;border-radius:6px;font-size:11px;color:#8a6090;line-height:1.6">
-        ⚠️ WARNING: Booker T is a bad announcer. Shucky ducky quack quack.
-      </div>
-    </div>`;
-  const fi = document.getElementById('file-input');
-  if (fi) fi.onchange = (e) => { handleFileInput(e); };
+    <div id="upload-progress"></div>
+    <div id="upload-results"></div>`;
 }
 
 function saveApiKey() {
-  const val = document.getElementById('api-key-input').value.trim();
-  if (!val) return;
-  apiKey = val;
-  localStorage.setItem('jwa-gemini-key', val);
-  if (activeTab === 'upload') renderUpload();
-}
-
-function clearApiKey() {
-  apiKey = '';
-  localStorage.removeItem('jwa-gemini-key');
+  const v = document.getElementById('api-key-input')?.value?.trim();
+  if (!v) return;
+  apiKey = v;
+  localStorage.setItem('jwa-gemini-key', v);
   renderUpload();
 }
-
+function clearApiKey() { apiKey=''; localStorage.removeItem('jwa-gemini-key'); renderUpload(); }
 async function testApiKey() {
-  const result = document.getElementById('api-test-result');
-  if (!apiKey) { result.innerHTML = '<span style="color:#f44">No API key saved</span>'; return; }
-  result.innerHTML = '<span style="color:#4a8aaa">Testing...</span>';
+  const el = document.getElementById('api-test-result');
+  if (!apiKey) { el.innerHTML = '<span style="color:#f44">No API key saved.</span>'; return; }
+  el.innerHTML = '<span style="color:#4a8aaa">Testing...</span>';
   try {
-    const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${apiKey}`, {
-      method: 'POST', headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({contents:[{parts:[{text:'Reply with just the word WORKING'}]}]})
-    });
-    const data = await resp.json();
-    if (data.error) { result.innerHTML = `<span style="color:#f44">ERROR: ${data.error.message}</span>`; }
-    else {
-      const txt = data.candidates?.[0]?.content?.parts?.[0]?.text || 'no response';
-      result.innerHTML = `<span style="color:#4f4">✓ API works! Response: ${txt.slice(0,50)}</span>`;
-    }
-  } catch(e) { result.innerHTML = `<span style="color:#f44">FAILED: ${e.message}</span>`; }
+    const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=${apiKey}`,
+      {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:'Say OK'}]}]})});
+    const d = await r.json();
+    el.innerHTML = d.candidates ? '<span style="color:#4f4">✓ API key works!</span>' : `<span style="color:#f44">Error: ${d.error?.message||'Unknown'}</span>`;
+  } catch(e) { el.innerHTML = `<span style="color:#f44">Error: ${e.message}</span>`; }
 }
 
 function handleDragOver(e) { e.preventDefault(); document.getElementById('drop-zone').classList.add('drag-over'); }
-function handleDragLeave() { document.getElementById('drop-zone').classList.remove('drag-over'); }
-function handleDrop(e) { e.preventDefault(); document.getElementById('drop-zone').classList.remove('drag-over'); processFiles([...e.dataTransfer.files].filter(f=>f.type.startsWith('image/'))); }
-function handleFileInput(e) { processFiles([...e.target.files]); e.target.value=''; }
+function handleDragLeave()  { document.getElementById('drop-zone').classList.remove('drag-over'); }
+function handleDrop(e) { e.preventDefault(); document.getElementById('drop-zone').classList.remove('drag-over'); handleFiles(e.dataTransfer.files); }
 
-async function processFiles(files) {
+async function handleFiles(files) {
   if (!apiKey) { alert('Please save your Gemini API key first.'); return; }
   if (!files.length) return;
-  window._lastGeminiText = null;
   const prog = document.getElementById('upload-progress');
-  const bar = document.getElementById('progress-bar');
-  const txt = document.getElementById('progress-text');
-  const eta = document.getElementById('progress-eta');
-  const cur = document.getElementById('progress-current');
-  const log = document.getElementById('progress-log');
-  const res = document.getElementById('upload-results');
-  if (!prog) { alert('Page not ready. Please refresh.'); return; }
-  prog.style.display='block'; res.innerHTML=''; log.innerHTML='';
-  const allParsed=[], logEntries=[];
-
-  for (let i=0; i<files.length; i++) {
-    const pct = Math.round((i/files.length)*100);
-    bar.style.width = pct+'%';
-    txt.textContent = `${i+1} / ${files.length}`;
-    cur.textContent = files[i].name;
-    const remaining = (files.length - i) * 18;
-    eta.textContent = `~${remaining}s remaining`;
-
-    if (i > 0) {
-      // Countdown display between images
-      for (let s=10; s>0; s--) {
-        eta.textContent = `next image in ${s}s...`;
-        await new Promise(r=>setTimeout(r,1000));
-      }
-    }
-
-    let parsed=[], status='ok', errMsg='';
+  const res  = document.getElementById('upload-results');
+  prog.innerHTML = `<div style="padding:12px;color:#4a9aaa;font-family:'Orbitron',sans-serif;font-size:10px">PROCESSING ${files.length} FILE(S)...</div>`;
+  res.innerHTML = '';
+  let allUpdates = {};
+  for (let i = 0; i < files.length; i++) {
+    prog.innerHTML = `<div style="padding:12px;color:#4a9aaa;font-family:'Orbitron',sans-serif;font-size:10px">FILE ${i+1} OF ${files.length}...</div>`;
     try {
-      parsed = await parseWithGemini(files[i]);
-      if (!parsed.length) status='empty';
-    } catch(e) {
-      if (e.message && e.message.includes('429')) {
-        eta.textContent = 'Rate limited — waiting 20s...';
-        for (let s=20; s>0; s--) {
-          eta.textContent = `Rate limited — retrying in ${s}s...`;
-          await new Promise(r=>setTimeout(r,1000));
-        }
-        try { parsed = await parseWithGemini(files[i]); if(!parsed.length) status='empty'; }
-        catch(e2) { status='error'; errMsg=e2.message; }
-      } else { status='error'; errMsg=e.message; }
-    }
-
-    logEntries.push({name:files[i].name, count:parsed.length, status, errMsg});
-    allParsed.push(...parsed);
-
-    if (parsed.length) {
-      parsed.forEach(({name,dna}) => {
-        if (name && dna >= 0) dnaInventory[name] = dna;
-      });
-      saveInventory();
-    }
-
-    // Update live log
-    const color = status==='ok'?'#4f4':status==='empty'?'#fa4':'#f44';
-    const label = status==='ok'?`+${parsed.length} creatures`:status==='empty'?'no data found':'error: '+errMsg;
-    log.innerHTML += `<div style="display:flex;justify-content:space-between;padding:2px 0;border-bottom:1px solid #0a2020">
-      <span style="color:#4a7a8a;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:65%">${files[i].name}</span>
-      <span style="color:${color};font-weight:700">${label}</span>
-    </div>`;
-    log.scrollTop = log.scrollHeight;
+      const updates = await processScreenshot(files[i]);
+      Object.assign(allUpdates, updates);
+      await delay(1200);
+    } catch(e) { console.warn('File failed:', files[i].name, e); }
   }
-
-  bar.style.width='100%';
-  txt.textContent=`${files.length} / ${files.length}`;
-  cur.textContent='';
-  eta.textContent='✅ Complete!';
-
-  const ok = allParsed.length > 0;
-  res.innerHTML = `<div class="result-box" style="background:${ok?'#0a2010':'#200a0a'};border:1px solid ${ok?'#2a6020':'#602020'}">
-    <div style="font-family:'Orbitron',sans-serif;font-size:13px;color:${ok?'#4f4':'#f44'};text-align:center;padding:8px 0">
-      ${ok ? `✓ ${allParsed.length} CREATURES UPDATED` : '✗ NO DATA DETECTED'}
-    </div>
-    ${!ok ? `<div style="font-size:11px;color:#6a4040;text-align:center;margin-top:4px">Check your API key and try again</div>` : ''}
-  </div>`;
-
-  renderAll();
+  prog.innerHTML = '';
+  if (Object.keys(allUpdates).length) {
+    Object.assign(dnaInventory, allUpdates);
+    saveInventory();
+    res.innerHTML = `<div style="background:#0a2010;border:1px solid #4f430;border-radius:10px;padding:12px">
+      <div style="color:#4f4;font-family:'Orbitron',sans-serif;font-size:10px;margin-bottom:7px">✓ UPDATED ${Object.keys(allUpdates).length} CREATURES</div>
+      ${Object.entries(allUpdates).map(([n,d])=>`<div class="result-row"><span>${n}</span><span style="color:#4af">${d.toLocaleString()}</span></div>`).join('')}
+    </div>`;
+  } else {
+    res.innerHTML = `<div style="color:#f44;text-align:center;padding:14px;font-size:12px">No DNA data found in screenshots.</div>`;
+  }
 }
 
-async function parseWithGemini(file) {
-  const b64 = await new Promise((res,rej) => {
-    const r = new FileReader(); r.onload=()=>res(r.result.split(',')[1]); r.onerror=rej; r.readAsDataURL(file);
-  });
-  const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${apiKey}`, {
-    method:'POST', headers:{'Content-Type':'application/json'},
-    body: JSON.stringify({
-      contents:[{parts:[
-        {inline_data:{mime_type:file.type||'image/jpeg',data:b64}},
-        {text:`This is a Jurassic World Alive creature collection screenshot. Each creature card shows the creature name at the bottom and DNA in format CURRENT/MAX (e.g. 14925/1000). Extract ONLY the CURRENT (first) number.\n\nReturn ONLY a valid JSON array, no markdown, no explanation:\n[{"name":"Creature Name","dna":1234},...]\n\nRules:\n- Use proper title case (e.g. "Tyrannosaurus Rex Gen 2" not "TYRANNOSAURUS REX GEN 2")\n- If DNA shows 250000+ treat as 250000\n- Include ALL visible creatures\n- Return [] if no creatures visible`}
-      ]}],
-      generationConfig:{temperature:0}
-    })
-  });
+async function processScreenshot(file) {
+  const b64 = await new Promise((res,rej) => { const r=new FileReader(); r.onload=()=>res(r.result.split(',')[1]); r.onerror=rej; r.readAsDataURL(file); });
+  const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=${apiKey}`,
+    {method:'POST',headers:{'Content-Type':'application/json'},
+     body:JSON.stringify({contents:[{parts:[
+       {inline_data:{mime_type:file.type,data:b64}},
+       {text:'This is a Jurassic World Alive screenshot. Extract ALL visible creature names and DNA counts. Return ONLY a JSON object like {"Velociraptor":1250}. No markdown, no explanation.'}
+     ]}]})});
   const data = await resp.json();
-  if (data.error) throw new Error(data.error.message);
-  if (!data.candidates?.length) throw new Error('No response from API');
-  const t = data.candidates[0]?.content?.parts?.[0]?.text || '[]';
-  window._lastGeminiText = t;
-  return JSON.parse(t.replace(/```json|```/g,'').trim());
+  if (!data.candidates?.[0]) throw new Error('No response');
+  let text = data.candidates[0].content.parts[0].text.trim().replace(/```json|```/g,'').trim();
+  const parsed = JSON.parse(text);
+  const out = {};
+  Object.entries(parsed).forEach(([name,dna]) => { if (typeof dna==='number'&&dna>=0) out[name]=dna; });
+  return out;
 }
 
-// ── IMPORT TAB ────────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// IMPORT TAB
+// ─────────────────────────────────────────────────────────────────────────────
 function renderImport() {
   document.getElementById('tab-import').innerHTML = `
-    <div class="info-box" style="margin-top:0;margin-bottom:14px">
-      <div class="info-box-title">HOW TO USE</div>
-      Share screenshots in Claude chat → Claude reads them → paste the list below → Import.<br>
-      Format: <span style="color:#4af;font-family:monospace">Therizinosaurus: 14925</span>
+    <div style="margin-bottom:12px">
+      <div style="font-family:'Orbitron',sans-serif;font-size:10px;color:#4a8aaa;margin-bottom:8px;letter-spacing:1px">PASTE DNA LIST</div>
+      <textarea id="import-text" rows="10" placeholder="Velociraptor: 1250&#10;Tyrannosaurus Rex 340&#10;or JSON: {&quot;Velociraptor&quot;: 1250}"></textarea>
     </div>
-    <textarea style="width:100%;height:200px;font-family:monospace;font-size:13px;line-height:1.6;resize:vertical;margin-bottom:10px;background:#080f1a;border:1px solid #0a3050;border-radius:8px;color:#c8e6ff;padding:10px;outline:none" id="import-text" placeholder="Paste DNA list here...&#10;&#10;Therizinosaurus: 14925&#10;Wuerhosaurus: 66826"></textarea>
     <div class="flex-row" style="margin-bottom:14px">
       <button class="btn-primary" onclick="previewImport()" style="flex:1">PREVIEW</button>
-      <button id="import-btn" class="btn-disabled" onclick="confirmImport()" style="flex:1">IMPORT ALL</button>
+      <button class="btn-success" id="confirm-btn" onclick="confirmImport()" style="flex:1;display:none">✓ CONFIRM</button>
     </div>
-    <div id="import-results"></div>`;
+    <div id="import-preview"></div>
+    <div style="margin-top:18px;border-top:1px solid #0a2030;padding-top:14px">
+      <div style="font-family:'Orbitron',sans-serif;font-size:10px;color:#4a8aaa;margin-bottom:8px">MANUAL ENTRY</div>
+      <div class="flex-row">
+        <input type="text" id="manual-name" placeholder="Creature name">
+        <input type="number" id="manual-dna" placeholder="DNA" style="width:90px">
+        <button class="btn-primary" onclick="addManual()" style="white-space:nowrap">ADD</button>
+      </div>
+    </div>
+    <div style="margin-top:18px;border-top:1px solid #0a2030;padding-top:14px">
+      <button class="btn-warn" style="width:100%" onclick="if(confirm('Clear ALL data?')){dnaInventory={};saveInventory();renderAll();}">🗑 CLEAR ALL DATA</button>
+    </div>`;
 }
 
+let importPreview = null;
 function previewImport() {
-  const lines = document.getElementById('import-text').value.split('\n').map(l=>l.trim()).filter(Boolean);
-  importPreview = [];
-  for (const line of lines) {
-    const m = line.match(/^(.+?)[\s:,]+(\d[\d,]+)\s*$/);
-    if (m) importPreview.push({name:m[1].trim(), dna:parseInt(m[2].replace(/,/g,''))});
-  }
-  const btn = document.getElementById('import-btn');
-  const res = document.getElementById('import-results');
-  if (!importPreview.length) { btn.className='btn-disabled'; res.innerHTML=`<div style="color:#f44;font-size:12px;padding:10px">No valid entries. Format: Creature Name: 1234</div>`; return; }
-  btn.className='btn-success';
-  res.innerHTML=`<div style="background:#080f1a;border:1px solid #0a3050;border-radius:8px;padding:14px">
-    <div style="font-family:'Orbitron',sans-serif;font-size:11px;color:#4a8aaa;margin-bottom:10px;letter-spacing:1px">PREVIEW — ${importPreview.length} ENTRIES</div>
-    <div style="max-height:300px;overflow-y:auto">${importPreview.map(e=>`<div class="result-row"><span style="color:#4a9aaa">${e.name}</span><span style="color:#4af;font-weight:700">${e.dna.toLocaleString()}</span></div>`).join('')}</div>
-  </div>`;
+  const text = document.getElementById('import-text').value.trim();
+  if (!text) return;
+  let parsed = {};
+  try {
+    const jm = text.match(/\{[\s\S]*\}/);
+    if (jm) { parsed = JSON.parse(jm[0]); }
+    else { text.split('\n').forEach(line => { const m=line.trim().match(/^(.+?)[\s:]+(\d+)\s*$/); if(m) parsed[m[1].trim()]=parseInt(m[2]); }); }
+  } catch(e) { document.getElementById('import-preview').innerHTML=`<div style="color:#f44;font-size:12px">Parse error: ${e.message}</div>`; return; }
+  importPreview = Object.fromEntries(Object.entries(parsed).filter(([,v])=>typeof v==='number'&&v>=0));
+  const count = Object.keys(importPreview).length;
+  document.getElementById('confirm-btn').style.display = count?'block':'none';
+  document.getElementById('import-preview').innerHTML = `
+    <div style="background:#0a1520;border:1px solid #0a3050;border-radius:10px;padding:12px">
+      <div style="color:#4a8aaa;font-family:'Orbitron',sans-serif;font-size:10px;margin-bottom:7px">PREVIEW: ${count} CREATURES</div>
+      ${Object.entries(importPreview).slice(0,20).map(([n,d])=>`<div class="result-row"><span>${n}</span><span style="color:#4af">${d.toLocaleString()}</span></div>`).join('')}
+      ${count>20?`<div style="color:#2a6080;font-size:11px;margin-top:5px">...and ${count-20} more</div>`:''}
+    </div>`;
 }
 
 function confirmImport() {
-  if (!importPreview||!importPreview.length) return;
-  importPreview.forEach(({name,dna}) => { dnaInventory[name]=dna; });
+  if (!importPreview) return;
+  Object.assign(dnaInventory, importPreview);
   saveInventory();
-  document.getElementById('import-results').innerHTML=`<div style="background:#0a2010;border:1px solid #2a6020;border-radius:8px;padding:12px;color:#4f4;font-family:'Orbitron',sans-serif;font-size:12px;text-align:center">✓ ${importPreview.length} ENTRIES SAVED</div>`;
-  document.getElementById('import-btn').className='btn-disabled';
-  importPreview=null; renderAll();
+  importPreview = null;
+  document.getElementById('confirm-btn').style.display='none';
+  document.getElementById('import-preview').innerHTML=`<div style="color:#4f4;text-align:center;padding:10px;font-size:12px">✓ Imported!</div>`;
+  document.getElementById('import-text').value='';
+  renderAll();
 }
 
-init();
-showTab('owned');
+function addManual() {
+  const name = document.getElementById('manual-name').value.trim();
+  const dna  = parseInt(document.getElementById('manual-dna').value);
+  if (!name||isNaN(dna)||dna<0) return;
+  dnaInventory[name]=dna; saveInventory();
+  document.getElementById('manual-name').value='';
+  document.getElementById('manual-dna').value='';
+  renderAll();
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────────────────────────────────────
+buildIndexes();
+renderAll();
 </script>
 </body>
 </html>
