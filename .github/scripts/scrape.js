@@ -66,9 +66,9 @@ async function scrape() {
       await sleep(500);
 
       const creature = await page.evaluate((fallbackName, RARITY_THRESHOLDS) => {
-        // Name
+        // Name — try multiple selectors
         const h1 = document.querySelector('h1');
-        const name = h1 ? h1.textContent.trim() : fallbackName;
+        const name = (h1 ? h1.textContent.trim() : fallbackName) || fallbackName;
 
         // Rarity
         let rarity = 'Common';
@@ -79,12 +79,12 @@ async function scrape() {
         // Class
         let creatureClass = 'Unknown';
         const classMatch = allText.match(/Class\s*\n?\s*([A-Za-z ]+)/);
-        if (classMatch) creatureClass = classMatch[1].trim();
+        if (classMatch) creatureClass = classMatch[1].trim().split('\n')[0].trim();
 
         // Hybrid type
         let hybridType = 'Non Hybrid';
         const htMatch = allText.match(/Hybrid Type\s*\n?\s*([A-Za-z ]+)/);
-        if (htMatch) hybridType = htMatch[1].trim();
+        if (htMatch) hybridType = htMatch[1].trim().split('\n')[0].trim();
         const isHybrid = hybridType.toLowerCase() !== 'non hybrid';
 
         // Components — look for "For Fusing" section
@@ -93,7 +93,6 @@ async function scrape() {
           const fuseIdx = allText.indexOf('For Fusing');
           if (fuseIdx !== -1) {
             const section = allText.slice(fuseIdx, fuseIdx + 1000);
-            // Match lines like "1,600 DNA  CreatureName"
             const matches = [...section.matchAll(/([\d,]+)\s+DNA\s+([A-Z][A-Za-z0-9 '.]+)/g)];
             const threshold = RARITY_THRESHOLDS[rarity] || 200;
             const fusesNeeded = threshold / 10;
@@ -113,7 +112,9 @@ async function scrape() {
         return { name, rarity, class: creatureClass, isHybrid, hybridType, components };
       }, fallbackName, RARITY_THRESHOLDS);
 
-      db[creature.name] = creature;
+      // Use slug as key fallback to prevent overwriting if name parsing fails
+      const key = creature.name && creature.name.length > 1 ? creature.name : fallbackName;
+      db[key] = { ...creature, name: key };
     } catch (e) {
       console.error(`  FAILED: ${slug} — ${e.message}`);
     }
@@ -135,7 +136,7 @@ async function main() {
   const dbJson = JSON.stringify(db, null, 2);
 
   // Read the current index.html, replace the DB placeholder
-  const indexPath = path.join(__dirname, '..', 'index.html');
+  const indexPath = path.join(__dirname, '..', '..', 'index.html');
   let html = fs.readFileSync(indexPath, 'utf8');
 
   // Replace everything between the DB markers
