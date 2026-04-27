@@ -1,16 +1,65 @@
-name: Monthly Creature Database Update
+name: JWA Tracker Automation
 
 on:
   schedule:
-    # Runs at 6:00 AM UTC on the 15th of every month
+    # Process pending images every 5 minutes
+    - cron: '*/5 * * * *'
+    # Monthly creature DB update on the 15th at 6AM UTC
     - cron: '0 6 15 * *'
-  # Also allow manual trigger from GitHub Actions tab
   workflow_dispatch:
+    inputs:
+      job:
+        description: 'Which job to run'
+        required: true
+        default: 'process-images'
+        type: choice
+        options:
+          - process-images
+          - update-database
 
 jobs:
-  update-database:
+  process-images:
+    if: >
+      (github.event_name == 'schedule' && github.event.schedule == '*/5 * * * *') ||
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.job == 'process-images')
     runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Install dependencies
+        run: |
+          cd .github/scripts
+          npm install
+
+      - name: Process one image
+        env:
+          CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
+          CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
+          CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          cd .github/scripts
+          node process-images.js
+
+      - name: Commit and push updated index.html
+        run: |
+          git config user.name "JWA Bot"
+          git config user.email "jwa-bot@users.noreply.github.com"
+          git add index.html
+          git diff --staged --quiet || git commit -m "chore: update inventory from screenshot $(date +'%Y-%m-%d %H:%M')"
+          git push
+
+  update-database:
+    if: >
+      (github.event_name == 'schedule' && github.event.schedule == '0 6 15 * *') ||
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.job == 'update-database')
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
