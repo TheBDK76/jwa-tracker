@@ -76,10 +76,10 @@ async function scrape() {
         const rarityMatch = allText.match(/Rarity\s*\n?\s*([A-Za-z]+)/);
         if (rarityMatch) rarity = rarityMatch[1].trim();
 
-        // Class
+        // Class — get first word only to avoid "ification" clipping bug
         let creatureClass = 'Unknown';
-        const classMatch = allText.match(/Class\s*\n?\s*([A-Za-z ]+)/);
-        if (classMatch) creatureClass = classMatch[1].trim().split('\n')[0].trim();
+        const classMatch = allText.match(/Class\s*\n?\s*([A-Za-z]+)/);
+        if (classMatch) creatureClass = classMatch[1].trim().split(/\s+/)[0];
 
         // Hybrid type
         let hybridType = 'Non Hybrid';
